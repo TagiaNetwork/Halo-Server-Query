@@ -3,63 +3,123 @@
 
 import socket
 
+FLAG_STRINGS = {
+    # Player Flags
+    "NumberOfLives": ["Infinite", 1, 3, 5],
+    "MaximumHealth": ["50%", "100%", "150%", "200%", "300%", "400%"],
+    "Shields": [1, 0],
+    "RespawnTime": [0, 5, 10, 15],
+    "RespawnGrowth": [0, 5, 10, 15],
+    "OddManOut": [0, 1],
+    "InvisiblePlayers": [0, 1],
+    "SuicidePenalty": [0, 5, 10, 15],
+    "InfiniteGrenades": [0, 1],
+    "WeaponSet": [
+        "Normal", "Pistols", "Assault Rifles", "Plasma", "Sniper", "No Sniping",
+        "Rocket Launchers", "Shotguns", "Short Range", "Human", "Covenant",
+        "Classic", "Heavy Weapons"],
+    "StartingEquipment": ["Custom", "Generic"],
+    "Indicator": ["Motion Tracker", "Nav Points", "None"],
+    "OtherPlayersOnRadar": ["No", "All", "", "Friends"],
+    "FriendIndicators": [0, 1],
+    "FriendlyFire": ["Off", "On", "Shields Only", "Explosives Only"],
+    "FriendlyFirePenalty": [0, 5, 10, 15],
+    "AutoTeamBalance": [0, 1],
+
+    # Vehicle Flags
+    "Vehicle respawn": [0, 30, 60, 90, 120, 180, 300],
+    "Red vehicle set": [
+        "Default", "No vehicles", "Warthogs", "Ghosts", "Scorpions", "Rocket Warthogs",
+        "Banshees", "Shades", "Custom"],
+    "Blue vehicle set": [
+        "Default", "No vehicles", "Warthogs", "Ghosts", "Scorpions", "Rocket Warthogs",
+        "Banshees", "Shades", "Custom"],
+
+    # Game Falgs
+    "Game type": ["", "Capture the Flag", "Slayer", "Oddball", "King of the Hill", "Race"],
+    # CTF
+    "Assault": [0, 1],
+    "Flag must reset": [0, 1],
+    "Flag at home to score": [0, 1],
+    "Single flag": [0, 60, 120, 180, 300, 600],
+    # Slayer
+    "Death bonus": [1, 0],
+    "Kill penalty": [1, 0],
+    "Kill in order": [0, 1],
+    # Oddball
+    "Random start": [0, 1],
+    "Speed with ball": ["Slow", "Normal", "Fast"],
+    "Trait with ball": ["None", "Invisible", "Extra Damage", "Damage Resistant"],
+    "Trait without ball": ["None", "Invisible", "Extra Damage", "Damage Resistant"],
+    "Ball type": ["Normal", "Reverse Tag", "Juggernaut"],
+    "Ball spawn count": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+    # KOTH
+    "Moving hill": [0, 1],
+    # Race
+    "Race type": ["Normal", "Any Order", "Rally"],
+    "Team scoring": ["Minimum", "Maximum", "Sum"]
+}
+
+
 def decodePlayerFlags(player_flags: str):
     """Decode player flags"""
     player_flags = int(player_flags)
     return {
-        'NumberOfLives': player_flags & 3,
-        'MaximumHealth': (player_flags >> 2) & 7,
-        'Shields': (player_flags >> 5) & 1,
-        'RespawnTime': (player_flags >> 6) & 3,
-        'RespawnGrowth': (player_flags >> 8) & 3,
-        'OddManOut': (player_flags >> 10) & 1,
-        'InvisiblePlayers': (player_flags >> 11) & 1,
-        'SuicidePenalty': (player_flags >> 12) & 3,
-        'InfiniteGrenades': (player_flags >> 14) & 1,
-        'WeaponSet': (player_flags >> 15) & 15,
-        'StartingEquipment': (player_flags >> 19) & 1,
-        'Indicator': (player_flags >> 20) & 3,
-        'OtherPlayersOnRadar': (player_flags >> 22) & 3,
-        'FriendIndicators': (player_flags >> 24) & 1,
-        'FriendlyFire': (player_flags >> 25) & 3,
-        'FriendlyFirePenalty': (player_flags >> 27) & 3,
-        'AutoTeamBalance': (player_flags >> 29) & 1
+        'NumberOfLives': FLAG_STRINGS['NumberOfLives'][player_flags & 3],
+        'MaximumHealth': FLAG_STRINGS['MaximumHealth'][(player_flags >> 2) & 7],
+        'Shields': FLAG_STRINGS['Shields'][(player_flags >> 5) & 1],
+        'RespawnTime': FLAG_STRINGS['RespawnTime'][(player_flags >> 6) & 3],
+        'RespawnGrowth': FLAG_STRINGS['RespawnGrowth'][(player_flags >> 8) & 3],
+        'OddManOut': FLAG_STRINGS['OddManOut'][(player_flags >> 10) & 1],
+        'InvisiblePlayers': FLAG_STRINGS['InvisiblePlayers'][(player_flags >> 11) & 1],
+        'SuicidePenalty': FLAG_STRINGS['SuicidePenalty'][(player_flags >> 12) & 3],
+        'InfiniteGrenades': FLAG_STRINGS['InfiniteGrenades'][(player_flags >> 14) & 1],
+        'WeaponSet': FLAG_STRINGS['WeaponSet'][(player_flags >> 15) & 15],
+        'StartingEquipment': FLAG_STRINGS['StartingEquipment'][(player_flags >> 19) & 1],
+        'Indicator': FLAG_STRINGS['Indicator'][(player_flags >> 20) & 3],
+        'OtherPlayersOnRadar': FLAG_STRINGS['OtherPlayersOnRadar'][(player_flags >> 22) & 3],
+        'FriendIndicators': FLAG_STRINGS['FriendIndicators'][(player_flags >> 24) & 1],
+        'FriendlyFire': FLAG_STRINGS['FriendlyFire'][(player_flags >> 25) & 3],
+        'FriendlyFirePenalty': FLAG_STRINGS['FriendlyFirePenalty'][(player_flags >> 27) & 3],
+        'AutoTeamBalance': FLAG_STRINGS['AutoTeamBalance'][(player_flags >> 29) & 1]
     }
 
 def decodeVehicleFlags(vehicle_flags: str):
     """Decode vehicle flags"""
     vehicle_flags = int(vehicle_flags)
     return {
-        'Vehicle respawn': (vehicle_flags & 7),
-        'Red vehicle set': (vehicle_flags >> 3) & 15,
-        'Blue vehicle set': (vehicle_flags >> 7) & 15
+        'Vehicle respawn': FLAG_STRINGS['Vehicle respawn'][(vehicle_flags & 7)],
+        'Red vehicle set': FLAG_STRINGS['Red vehicle set'][(vehicle_flags >> 3) & 15],
+        'Blue vehicle set': FLAG_STRINGS['Blue vehicle set'][(vehicle_flags >> 7) & 15]
     }
 
 def decodeGameFlags(game_flags: str):
     """Decode player flags"""
     game_flags = int(game_flags)
-    decoded_flags = {'Game type': game_flags & 7}
-    if decoded_flags['Game type'] == 1: # CTF
-        decoded_flags['Assault'] = (game_flags >> 3) & 1
-        decoded_flags['Flag must reset'] = (game_flags >> 5) & 1
-        decoded_flags['Flag at home to score'] = (game_flags >> 6) & 1
-        decoded_flags['Single flag'] = (game_flags >> 7) & 7
-    elif decoded_flags['Game type'] == 2: # Slayer
-        decoded_flags['Death bonus'] = (game_flags >> 3) & 1
-        decoded_flags['Kill penalty'] = (game_flags >> 5) & 1
-        decoded_flags['Kill in order'] = (game_flags >> 6) & 1
-    elif decoded_flags['Game type'] == 3: # Oddball
-        decoded_flags['Random start'] = (game_flags >> 3) & 1
-        decoded_flags['Speed with ball'] = (game_flags >> 5) & 3
-        decoded_flags['Trait with ball'] = (game_flags >> 7) & 3
-        decoded_flags['Trait without ball'] = (game_flags >> 9) & 3
-        decoded_flags['Ball type'] = (game_flags >> 11) & 3
-        decoded_flags['Ball spawn count'] = (game_flags >> 13) & 31
-    elif decoded_flags['Game type'] == 4: # KOTH
-        decoded_flags['Moving hill'] = (game_flags >> 3) & 1
-    elif decoded_flags['Game type'] == 5: # Race
-        decoded_flags['Race type'] = (game_flags >> 3) & 3
-        decoded_flags['Team scoring'] = (game_flags >> 5) & 3
+    decoded_flags = {'Game type': FLAG_STRINGS['Game type'][game_flags & 7]}
+
+    if decoded_flags['Game type'] == 'Capture the Flag':
+        decoded_flags['Assault'] = FLAG_STRINGS['Assault'][(game_flags >> 3) & 1]
+        decoded_flags['Flag must reset'] = FLAG_STRINGS['Flag must reset'][(game_flags >> 5) & 1]
+        decoded_flags['Flag at home to score'] = FLAG_STRINGS['Flag at home to score'][(game_flags >> 6) & 1]
+        decoded_flags['Single flag'] = FLAG_STRINGS['Single flag'][(game_flags >> 7) & 7]
+    elif decoded_flags['Game type'] == 'Slayer':
+        decoded_flags['Death bonus'] = FLAG_STRINGS['Death bonus'][(game_flags >> 3) & 1]
+        decoded_flags['Kill penalty'] = FLAG_STRINGS['Kill penalty'][(game_flags >> 5) & 1]
+        decoded_flags['Kill in order'] = FLAG_STRINGS['Kill in order'][(game_flags >> 6) & 1]
+    elif decoded_flags['Game type'] == 'Oddball':
+        decoded_flags['Random start'] = FLAG_STRINGS['Random start'][(game_flags >> 3) & 1]
+        decoded_flags['Speed with ball'] = FLAG_STRINGS['Speed with ball'][(game_flags >> 5) & 3]
+        decoded_flags['Trait with ball'] = FLAG_STRINGS['Trait with ball'][(game_flags >> 7) & 3]
+        decoded_flags['Trait without ball'] = FLAG_STRINGS['Trait without ball'][(game_flags >> 9) & 3]
+        decoded_flags['Ball type'] = FLAG_STRINGS['Ball type'][(game_flags >> 11) & 3]
+        decoded_flags['Ball spawn count'] = FLAG_STRINGS['Ball spawn count'][(game_flags >> 13) & 31]
+    elif decoded_flags['Game type'] == 'King of the Hill':
+        decoded_flags['Moving hill'] = FLAG_STRINGS['Moving hill'][(game_flags >> 3) & 1]
+    elif decoded_flags['Game type'] == 'Race':
+        decoded_flags['Race type'] = FLAG_STRINGS['Race type'][(game_flags >> 3) & 3]
+        decoded_flags['Team scoring'] = FLAG_STRINGS['Team scoring'][(game_flags >> 5) & 3]
+
     return decoded_flags
 
 def parseData(data: bytes):
