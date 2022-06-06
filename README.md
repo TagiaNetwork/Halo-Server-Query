@@ -1,4 +1,4 @@
-# halo-server-query-py
+# Halo Server Query
 Query and retrieve information about Halo: Custom Edition servers (based on [Chaosvex's "Halo-Status"](https://github.com/Chaosvex/Halo-Status))
 
 # example
