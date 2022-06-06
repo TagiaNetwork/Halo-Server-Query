@@ -219,17 +219,17 @@ def parseData(data: bytes):
             assocArry["players"][i] = dict()
             assocArry["players"][i]["slot"] = i
             assocArry["players"][i]["name"] = queryArray[
-                playerOffset + pCount
-            ]  # pyright: ignore
+                playerOffset + pCount  # pyright: ignore
+            ]
             assocArry["players"][i]["score"] = queryArray[
-                scoreOffset + pCount
-            ]  # pyright: ignore
+                scoreOffset + pCount  # pyright: ignore
+            ]
             assocArry["players"][i]["ping"] = queryArray[
-                pingOffset + pCount
-            ]  # pyright: ignore
+                pingOffset + pCount  # pyright: ignore
+            ]
             assocArry["players"][i]["team"] = queryArray[
-                teamOffset + pCount
-            ]  # pyright: ignore
+                teamOffset + pCount  # pyright: ignore
+            ]
             pCount += 2
             i += 1
 
